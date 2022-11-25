@@ -12,17 +12,10 @@ datasource db {
 
 
 model Emailsubscribed {
+  id             String   @id             @default(uuid())
   email          String   @unique
   dateSubscribed DateTime @default(now())
-  id             String   @id             @default(uuid())
-
+  validation     Boolean?  @default(false)
 }
 
-model playerSubscribed{
-  id              String  @id             @default(cuid())
-  playerName      String  
-  playerHash      String  
-  rankValorant    String
-  
 
-}

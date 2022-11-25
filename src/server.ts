@@ -1,23 +1,28 @@
-import Fastify from "fastify";
+import Fastify, { FastifyReply } from "fastify";
 import cors from '@fastify/cors'
 import { emailSubscribedFunction } from "./routes/subscribedEmail";
+import { mailchimpServices } from "./plugins/mailChimpCrud";
 
+const mail = new mailchimpServices()
 
 async function bootstrap() {
+
     const fastify = Fastify({
         logger:true
     })
     fastify.register(cors, {
         origin:true
     })
-    //testing nodemailer router
+   
 
 
 
     //
     await fastify.get('/', (request,  reply)=>{
-        return {message:"Sorry!"}
+        
+        reply.send(mail.getListSpecified())
     })
+
     await fastify.register(emailSubscribedFunction)
 
 
