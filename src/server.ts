@@ -1,31 +1,21 @@
 import Fastify, { FastifyReply } from "fastify";
 import cors from '@fastify/cors'
-import { emailSubscribedFunction } from "./routes/subscribedEmail";
-import { mailchimpServices } from "./plugins/mailChimpCrud";
-
-const mail = new mailchimpServices()
+import { route } from "./routes/route";
 
 async function bootstrap() {
-
     const fastify = Fastify({
-        logger:true
-    })
+        logger:true})
+    
     fastify.register(cors, {
-        origin:true
-    })
-   
-
-
-
-    //
-    await fastify.get('/', (request,  reply)=>{
-        
-        reply.send(mail.getListSpecified())
-    })
-
-    await fastify.register(emailSubscribedFunction)
-
-
+        origin:true }) 
+    
+    fastify.get('/', (request,  reply)=>{
+        reply.status(201) })
+    
+    fastify.get('*/, (request, reply)=>{
+        reply.status(401) })
+    
+    fastify.register(route)
     
     fastify.listen({port:3333})
 }
