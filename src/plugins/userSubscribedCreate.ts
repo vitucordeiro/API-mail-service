@@ -7,44 +7,27 @@ const mailchimp = new mailchimpServices()
 export async function newDataOfSubscribed(request,reply){
    
     const createSubscribedNewsletter = await z.object({
-        email: z.string()
-    })
+        email: z.string() })
+   
     const {email} = createSubscribedNewsletter.parse(request.body)
 
     const validationEmailDataBase = await prisma.emailsubscribed.findUnique({
         where:{
             email:email
-        }
-    })
+        } })
 
     if(!validationEmailDataBase){
-
         const emailSub = await prisma.emailsubscribed.create({
-            data:{
-                email,
-                }
-        })
-
+            data:{email}})
+      
         try{
-
             mailchimp.addMemberAtList(email)
-            reply.status(201).send({message:"Deu bom"})
-
+            reply.status(201).send({message:"Sucess"})
         }catch(e){
-
-            reply.status(400).send({e})
-
-        }
-
-        reply.status(201).send({userData: emailSub})
-
-    }else{
+            reply.status(400).send({e})}
        
-        reply.status(400).send({message:'Try another email.'})
-        
-    }
-
-    
-    
-
-}
+        reply.status(201).send({userData: emailSub})
+       
+       }else{ 
+         reply.status(400).send({message:'Try another email.'}) }
+   }
