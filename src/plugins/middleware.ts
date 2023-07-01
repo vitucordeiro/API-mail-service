@@ -4,27 +4,25 @@ import {prisma} from '../lib/prisma'
 import { mailchimpServices } from './mailService'
 const mailchimp = new mailchimpServices()
 
-export async function newDataOfSubscribed(request,reply){
+export async function middleware(request,reply){
    
-    const createSubscribedNewsletter = await z.object({
+    const dataUser = await z.object({
         email: z.string() })
    
-    const {email} = createSubscribedNewsletter.parse(request.body)
+    const {email} = dataUser.parse(request.body)
 
-    const validationEmailDataBase = await prisma.emailsubscribed.findUnique({
+    const validation = await prisma.emailsubscribed.findUnique({
         where:{
             email:email
         } })
 
-    if(!validationEmailDataBase){
-        const emailSub = await prisma.emailsubscribed.create({
-            data:{email}})
-      
+    if(!validation){      
         try{
+            await prisma.emailsubscribed.create({data:{email}})
             mailchimp.addMemberAtList(email)
             reply.status(201).send({message:"Sucess"})
-        }catch(e){
-            reply.status(400).send({e})}
+        }catch(error){
+            reply.status(400).send({error})}
        
         reply.status(201).send({userData: emailSub})
        
