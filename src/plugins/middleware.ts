@@ -1,7 +1,7 @@
 import z from 'zod'
 
 import {prisma} from '../lib/prisma'
-import { mailchimpServices } from './mailChimpCrud'
+import { mailchimpServices } from './mailService'
 const mailchimp = new mailchimpServices()
 
 export async function newDataOfSubscribed(request,reply){
